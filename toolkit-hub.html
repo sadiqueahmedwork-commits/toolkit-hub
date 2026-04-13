@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ToolkitHub — Free Online Tools</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&family=DM+Mono&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f8f7f3;
+      --surface: #ffffff;
+      --border: rgba(0,0,0,0.09);
+      --border-strong: rgba(0,0,0,0.18);
+      --text: #1a1a1a;
+      --text-muted: #6b6b6b;
+      --accent: #1a6ef5;
+      --accent-light: #e8f0fe;
+      --radius: 14px;
+      --radius-sm: 8px;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      font-size: 15px;
+    }
+
+    /* NAV */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 40px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 22px;
+      letter-spacing: -0.3px;
+      color: var(--text);
+    }
+    .logo span { color: var(--accent); }
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      font-size: 14px;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+    .nav-links a { text-decoration: none; color: inherit; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text); }
+
+    /* HERO */
+    .hero {
+      text-align: center;
+      padding: 64px 24px 48px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+    .hero-badge {
+      display: inline-block;
+      background: var(--accent-light);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 500;
+      padding: 5px 14px;
+      border-radius: 100px;
+      margin-bottom: 20px;
+      letter-spacing: 0.3px;
+    }
+    .hero h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(32px, 5vw, 48px);
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -1px;
+      margin-bottom: 14px;
+    }
+    .hero p {
+      font-size: 16px;
+      color: var(--text-muted);
+      max-width: 400px;
+      margin: 0 auto 32px;
+      line-height: 1.65;
+      font-weight: 300;
+    }
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .hero-stats strong { color: var(--text); font-weight: 500; }
+
+    /* MAIN LAYOUT */
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+    .section-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    /* TOOL TABS */
+    .tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+    .tab {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      background: var(--surface);
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+    .tab:hover { border-color: var(--border-strong); color: var(--text); }
+    .tab.active {
+      background: var(--text);
+      color: #fff;
+      border-color: var(--text);
+    }
+    .tab-icon { font-size: 14px; }
+
+    /* TOOL CARD */
+    .tool-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 36px;
+      display: none;
+      animation: fadeIn 0.2s ease;
+    }
+    .tool-card.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    .tool-header { margin-bottom: 28px; }
+    .tool-header h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 26px;
+      font-weight: 400;
+      margin-bottom: 6px;
+    }
+    .tool-header p { font-size: 14px; color: var(--text-muted); line-height: 1.5; }
+
+    /* FORM ELEMENTS */
+    .field { margin-bottom: 18px; }
+    .field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .field input,
+    .field textarea,
+    .field select {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      background: var(--bg);
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.18s;
+    }
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus { border-color: var(--accent); }
+    .field textarea { resize: vertical; min-height: 130px; line-height: 1.6; }
+
+    .row { display: flex; gap: 16px; }
+    .row .field { flex: 1; }
+
+    .btn {
+      padding: 12px 28px;
+      background: var(--text);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.18s;
+    }
+    .btn:hover { opacity: 0.85; }
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border-strong);
+    }
+    .btn-outline:hover { background: var(--bg); opacity: 1; }
+
+    /* RESULTS */
+    .result {
+      margin-top: 20px;
+      padding: 20px 24px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 15px;
+      line-height: 1.7;
+      display: none;
+    }
+    .result.show { display: block; }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 12px;
+      margin-top: 20px;
+    }
+    .stat-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      text-align: center;
+    }
+    .stat-card .num {
+      font-family: 'DM Serif Display', serif;
+      font-size: 28px;
+      color: var(--text);
+    }
+    .stat-card .lbl {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .bmi-bar {
+      margin-top: 20px;
+      height: 8px;
+      border-radius: 100px;
+      background: linear-gradient(to right, #60a5fa, #4ade80, #facc15, #f87171);
+      position: relative;
+    }
+    .bmi-indicator {
+      position: absolute;
+      top: -4px;
+      width: 16px;
+      height: 16px;
+      background: var(--text);
+      border-radius: 50%;
+      border: 2px solid #fff;
+      transform: translateX(-50%);
+      transition: left 0.4s ease;
+    }
+    .bmi-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+
+    .pwd-output {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .pwd-output input {
+      flex: 1;
+      font-family: 'DM Mono', monospace;
+      font-size: 14px;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--bg);
+      color: var(--text);
+      outline: none;
+      letter-spacing: 0.5px;
+    }
+
+    .strength-bar {
+      margin-top: 12px;
+      height: 4px;
+      border-radius: 100px;
+      background: var(--border);
+      overflow: hidden;
+    }
+    .strength-fill {
+      height: 100%;
+      border-radius: 100px;
+      transition: width 0.3s, background 0.3s;
+    }
+    .strength-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    .checkboxes { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 18px; }
+    .checkboxes label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--text);
+      cursor: pointer;
+    }
+    .checkboxes input[type=checkbox] { width: 16px; height: 16px; accent-color: var(--accent); }
+
+    .pct-result-big {
+      font-family: 'DM Serif Display', serif;
+      font-size: 48px;
+      color: var(--text);
+      margin: 8px 0 4px;
+    }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 28px 24px;
+      border-top: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--text-muted);
+      background: var(--surface);
+    }
+    footer a { color: var(--text-muted); text-decoration: none; }
+    footer a:hover { color: var(--text); }
+
+    @media (max-width: 600px) {
+      nav { padding: 14px 20px; }
+      .nav-links { gap: 16px; }
+      .hero { padding: 40px 20px 32px; }
+      .tool-card { padding: 24px 20px; }
+      .row { flex-direction: column; gap: 0; }
+      .hero-stats { gap: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Toolkit<span>Hub</span></div>
+  <div class="nav-links">
+    <a href="#">Tools</a>
+    <a href="#">About</a>
+    <a href="#">Contact</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-badge">100% Free · No signup needed</div>
+  <h1>Simple tools for<br>everyday tasks</h1>
+  <p>Fast, clean, and free. No clutter, no distractions — just results.</p>
+  <div class="hero-stats">
+    <div><strong>5</strong> tools available</div>
+    <div><strong>Free</strong> forever</div>
+    <div><strong>No</strong> account needed</div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="section-label">Choose a tool</div>
+  <div class="tabs">
+    <button class="tab active" onclick="switchTool('word', this)">
+      <span class="tab-icon">📝</span> Word Counter
+    </button>
+    <button class="tab" onclick="switchTool('bmi', this)">
+      <span class="tab-icon">💪</span> BMI Calculator
+    </button>
+    <button class="tab" onclick="switchTool('age', this)">
+      <span class="tab-icon">🎂</span> Age Calculator
+    </button>
+    <button class="tab" onclick="switchTool('password', this)">
+      <span class="tab-icon">🔒</span> Password Generator
+    </button>
+    <button class="tab" onclick="switchTool('percent', this)">
+      <span class="tab-icon">%</span> Percentage Calculator
+    </button>
+  </div>
+
+  <!-- WORD COUNTER -->
+  <div class="tool-card active" id="tool-word">
+    <div class="tool-header">
+      <h2>Word Counter</h2>
+      <p>Count words, characters, sentences and estimate reading time instantly as you type.</p>
+    </div>
+    <div class="field">
+      <label>Your text</label>
+      <textarea id="wc-input" placeholder="Paste or type your text here..." oninput="countWords()"></textarea>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="num" id="wc-words">0</div><div class="lbl">Words</div></div>
+      <div class="stat-card"><div class="num" id="wc-chars">0</div><div class="lbl">Characters</div></div>
+      <div class="stat-card"><div class="num" id="wc-chars-no">0</div><div class="lbl">No spaces</div></div>
+      <div class="stat-card"><div class="num" id="wc-sentences">0</div><div class="lbl">Sentences</div></div>
+      <div class="stat-card"><div class="num" id="wc-para">0</div><div class="lbl">Paragraphs</div></div>
+      <div class="stat-card"><div class="num" id="wc-read">0</div><div class="lbl">Min to read</div></div>
+    </div>
+  </div>
+
+  <!-- BMI CALCULATOR -->
+  <div class="tool-card" id="tool-bmi">
+    <div class="tool-header">
+      <h2>BMI Calculator</h2>
+      <p>Calculate your Body Mass Index and understand your health range instantly.</p>
+    </div>
+    <div class="row">
+      <div class="field"><label>Height (cm)</label><input type="number" id="bmi-h" placeholder="e.g. 170" /></div>
+      <div class="field"><label>Weight (kg)</label><input type="number" id="bmi-w" placeholder="e.g. 65" /></div>
+    </div>
+    <div class="row">
+      <div class="field">
+        <label>Gender</label>
+        <select id="bmi-gender">
+          <option value="any">Prefer not to say</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+        </select>
+      </div>
+      <div class="field"><label>Age</label><input type="number" id="bmi-age" placeholder="e.g. 25" /></div>
+    </div>
+    <button class="btn" onclick="calcBMI()">Calculate BMI</button>
+    <div class="result" id="bmi-result">
+      <div id="bmi-cat" style="font-size:18px; font-weight:500; margin-bottom:8px;"></div>
+      <div id="bmi-val" style="font-size:13px; color:var(--text-muted); margin-bottom:16px;"></div>
+      <div class="bmi-bar"><div class="bmi-indicator" id="bmi-dot"></div></div>
+      <div class="bmi-labels">
+        <span>Underweight</span><span>Normal</span><span>Overweight</span><span>Obese</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- AGE CALCULATOR -->
+  <div class="tool-card" id="tool-age">
+    <div class="tool-header">
+      <h2>Age Calculator</h2>
+      <p>Find your exact age in years, months, and days from your date of birth.</p>
+    </div>
+    <div class="row">
+      <div class="field"><label>Date of birth</label><input type="date" id="dob" /></div>
+      <div class="field"><label>Calculate age on (optional)</label><input type="date" id="age-to" /></div>
+    </div>
+    <button class="btn" onclick="calcAge()">Calculate Age</button>
+    <div class="result" id="age-result">
+      <div class="stats-grid" id="age-stats"></div>
+      <div id="age-extra" style="margin-top:16px; font-size:14px; color:var(--text-muted); line-height:1.7;"></div>
+    </div>
+  </div>
+
+  <!-- PASSWORD GENERATOR -->
+  <div class="tool-card" id="tool-password">
+    <div class="tool-header">
+      <h2>Password Generator</h2>
+      <p>Generate strong, random passwords instantly. Copy and stay secure.</p>
+    </div>
+    <div class="field">
+      <label>Password length: <span id="pwd-len-val">16</span> characters</label>
+      <input type="range" min="6" max="64" value="16" id="pwd-len" oninput="document.getElementById('pwd-len-val').textContent=this.value" style="width:100%; margin-top:8px;" />
+    </div>
+    <div class="checkboxes">
+      <label><input type="checkbox" id="pwd-upper" checked /> Uppercase (A-Z)</label>
+      <label><input type="checkbox" id="pwd-lower" checked /> Lowercase (a-z)</label>
+      <label><input type="checkbox" id="pwd-num" checked /> Numbers (0-9)</label>
+      <label><input type="checkbox" id="pwd-sym" checked /> Symbols (!@#$)</label>
+    </div>
+    <button class="btn" onclick="genPwd()">Generate Password</button>
+    <div class="pwd-output" id="pwd-out" style="display:none;">
+      <input type="text" id="pwd-val" readonly />
+      <button class="btn btn-outline" id="copy-btn" onclick="copyPwd()">Copy</button>
+    </div>
+    <div id="pwd-strength-wrap" style="display:none;">
+      <div class="strength-bar"><div class="strength-fill" id="strength-fill"></div></div>
+      <div class="strength-label" id="strength-label"></div>
+    </div>
+  </div>
+
+  <!-- PERCENTAGE CALCULATOR -->
+  <div class="tool-card" id="tool-percent">
+    <div class="tool-header">
+      <h2>Percentage Calculator</h2>
+      <p>Quickly calculate percentages, discounts, increases and more.</p>
+    </div>
+
+    <div class="field">
+      <label>What do you want to calculate?</label>
+      <select id="pct-mode" onchange="renderPctMode()">
+        <option value="basic">What is X% of Y?</option>
+        <option value="what">X is what % of Y?</option>
+        <option value="change">Percentage increase / decrease</option>
+        <option value="discount">Discount calculator</option>
+      </select>
+    </div>
+
+    <div id="pct-inputs"></div>
+
+    <button class="btn" onclick="calcPct()">Calculate</button>
+
+    <div class="result" id="pct-result">
+      <div class="pct-result-big" id="pct-big"></div>
+      <div id="pct-explain" style="font-size:14px; color:var(--text-muted);"></div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  &copy; 2025 ToolkitHub &mdash; Free tools for everyone &middot;
+  <a href="#">Privacy</a> &middot; <a href="#">Contact</a>
+</footer>
+
+<script>
+  // --- TAB SWITCHING ---
+  function switchTool(name, el) {
+    document.querySelectorAll('.tool-card').forEach(c => c.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tool-' + name).classList.add('active');
+    el.classList.add('active');
+  }
+
+  // --- WORD COUNTER ---
+  function countWords() {
+    const txt = document.getElementById('wc-input').value;
+    const words = txt.trim() === '' ? 0 : txt.trim().split(/\s+/).length;
+    const chars = txt.length;
+    const charsNo = txt.replace(/\s/g, '').length;
+    const sentences = txt.split(/[.!?]+/).filter(s => s.trim().length > 0).length;
+    const paras = txt.split(/\n\s*\n/).filter(p => p.trim().length > 0).length;
+    const read = Math.max(1, Math.ceil(words / 200));
+    document.getElementById('wc-words').textContent = words;
+    document.getElementById('wc-chars').textContent = chars;
+    document.getElementById('wc-chars-no').textContent = charsNo;
+    document.getElementById('wc-sentences').textContent = sentences;
+    document.getElementById('wc-para').textContent = paras || 0;
+    document.getElementById('wc-read').textContent = words < 200 ? '<1' : read;
+  }
+
+  // --- BMI CALCULATOR ---
+  function calcBMI() {
+    const h = parseFloat(document.getElementById('bmi-h').value) / 100;
+    const w = parseFloat(document.getElementById('bmi-w').value);
+    if (!h || !w || h <= 0 || w <= 0) { alert('Please enter valid height and weight.'); return; }
+    const bmi = w / (h * h);
+    const bmiRound = bmi.toFixed(1);
+    let cat, color;
+    if (bmi < 18.5) { cat = 'Underweight'; color = '#60a5fa'; }
+    else if (bmi < 25) { cat = 'Normal weight'; color = '#4ade80'; }
+    else if (bmi < 30) { cat = 'Overweight'; color = '#facc15'; }
+    else { cat = 'Obese'; color = '#f87171'; }
+    const pct = Math.min(Math.max(((bmi - 10) / 30) * 100, 2), 97);
+    document.getElementById('bmi-cat').textContent = cat;
+    document.getElementById('bmi-cat').style.color = color;
+    document.getElementById('bmi-val').textContent = `Your BMI is ${bmiRound}. Healthy range is 18.5 – 24.9`;
+    document.getElementById('bmi-dot').style.left = pct + '%';
+    const r = document.getElementById('bmi-result');
+    r.classList.add('show');
+  }
+
+  // --- AGE CALCULATOR ---
+  function calcAge() {
+    const dobVal = document.getElementById('dob').value;
+    if (!dobVal) { alert('Please enter your date of birth.'); return; }
+    const dob = new Date(dobVal);
+    const toVal = document.getElementById('age-to').value;
+    const now = toVal ? new Date(toVal) : new Date();
+    if (dob > now) { alert('Date of birth cannot be in the future.'); return; }
+
+    let y = now.getFullYear() - dob.getFullYear();
+    let m = now.getMonth() - dob.getMonth();
+    let d = now.getDate() - dob.getDate();
+    if (d < 0) { m--; d += new Date(now.getFullYear(), now.getMonth(), 0).getDate(); }
+    if (m < 0) { y--; m += 12; }
+
+    const totalDays = Math.floor((now - dob) / (1000 * 60 * 60 * 24));
+    const totalWeeks = Math.floor(totalDays / 7);
+    const totalMonths = y * 12 + m;
+    const nextBday = new Date(now.getFullYear(), dob.getMonth(), dob.getDate());
+    if (nextBday < now) nextBday.setFullYear(nextBday.getFullYear() + 1);
+    const daysToNext = Math.ceil((nextBday - now) / (1000 * 60 * 60 * 24));
+
+    document.getElementById('age-stats').innerHTML = `
+      <div class="stat-card"><div class="num">${y}</div><div class="lbl">Years</div></div>
+      <div class="stat-card"><div class="num">${m}</div><div class="lbl">Months</div></div>
+      <div class="stat-card"><div class="num">${d}</div><div class="lbl">Days</div></div>
+      <div class="stat-card"><div class="num">${totalWeeks.toLocaleString()}</div><div class="lbl">Total weeks</div></div>
+      <div class="stat-card"><div class="num">${totalDays.toLocaleString()}</div><div class="lbl">Total days</div></div>
+    `;
+    document.getElementById('age-extra').innerHTML =
+      `You have lived approximately <strong>${(totalDays * 24).toLocaleString()} hours</strong>.<br>` +
+      `Your next birthday is in <strong>${daysToNext} day${daysToNext !== 1 ? 's' : ''}</strong>.`;
+
+    document.getElementById('age-result').classList.add('show');
+  }
+
+  // --- PASSWORD GENERATOR ---
+  function genPwd() {
+    const len = parseInt(document.getElementById('pwd-len').value);
+    const upper = document.getElementById('pwd-upper').checked;
+    const lower = document.getElementById('pwd-lower').checked;
+    const num = document.getElementById('pwd-num').checked;
+    const sym = document.getElementById('pwd-sym').checked;
+    if (!upper && !lower && !num && !sym) { alert('Select at least one character type.'); return; }
+    let chars = '';
+    if (upper) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    if (lower) chars += 'abcdefghijklmnopqrstuvwxyz';
+    if (num) chars += '0123456789';
+    if (sym) chars += '!@#$%^&*()_+-=[]{}|;:,.<>?';
+    let pwd = '';
+    for (let i = 0; i < len; i++) pwd += chars[Math.floor(Math.random() * chars.length)];
+    document.getElementById('pwd-val').value = pwd;
+    document.getElementById('pwd-out').style.display = 'flex';
+    document.getElementById('pwd-strength-wrap').style.display = 'block';
+    document.getElementById('copy-btn').textContent = 'Copy';
+
+    let score = 0;
+    if (len >= 12) score++;
+    if (len >= 16) score++;
+    if (upper && lower) score++;
+    if (num) score++;
+    if (sym) score++;
+    const labels = ['Very weak', 'Weak', 'Fair', 'Strong', 'Very strong'];
+    const colors = ['#f87171', '#fb923c', '#facc15', '#4ade80', '#22c55e'];
+    const widths = [20, 40, 60, 80, 100];
+    const idx = Math.min(score, 4);
+    document.getElementById('strength-fill').style.width = widths[idx] + '%';
+    document.getElementById('strength-fill').style.background = colors[idx];
+    document.getElementById('strength-label').textContent = 'Strength: ' + labels[idx];
+  }
+
+  function copyPwd() {
+    navigator.clipboard.writeText(document.getElementById('pwd-val').value).then(() => {
+      const btn = document.getElementById('copy-btn');
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = 'Copy', 2000);
+    });
+  }
+
+  // --- PERCENTAGE CALCULATOR ---
+  function renderPctMode() {
+    const mode = document.getElementById('pct-mode').value;
+    const inp = document.getElementById('pct-inputs');
+    document.getElementById('pct-result').classList.remove('show');
+    if (mode === 'basic') {
+      inp.innerHTML = `<div class="row"><div class="field"><label>Percentage (%)</label><input type="number" id="p1" placeholder="e.g. 18" /></div><div class="field"><label>Of value</label><input type="number" id="p2" placeholder="e.g. 500" /></div></div>`;
+    } else if (mode === 'what') {
+      inp.innerHTML = `<div class="row"><div class="field"><label>Value (X)</label><input type="number" id="p1" placeholder="e.g. 90" /></div><div class="field"><label>Of total (Y)</label><input type="number" id="p2" placeholder="e.g. 200" /></div></div>`;
+    } else if (mode === 'change') {
+      inp.innerHTML = `<div class="row"><div class="field"><label>Original value</label><input type="number" id="p1" placeholder="e.g. 100" /></div><div class="field"><label>New value</label><input type="number" id="p2" placeholder="e.g. 130" /></div></div>`;
+    } else if (mode === 'discount') {
+      inp.innerHTML = `<div class="row"><div class="field"><label>Original price (₹)</label><input type="number" id="p1" placeholder="e.g. 1000" /></div><div class="field"><label>Discount (%)</label><input type="number" id="p2" placeholder="e.g. 20" /></div></div>`;
+    }
+  }
+
+  function calcPct() {
+    const mode = document.getElementById('pct-mode').value;
+    const p1 = parseFloat(document.getElementById('p1').value);
+    const p2 = parseFloat(document.getElementById('p2').value);
+    if (isNaN(p1) || isNaN(p2)) { alert('Please fill in both fields.'); return; }
+    let big = '', explain = '';
+    if (mode === 'basic') {
+      const res = ((p1 / 100) * p2).toFixed(2);
+      big = res; explain = `${p1}% of ${p2} = ${res}`;
+    } else if (mode === 'what') {
+      const res = ((p1 / p2) * 100).toFixed(2);
+      big = res + '%'; explain = `${p1} is ${res}% of ${p2}`;
+    } else if (mode === 'change') {
+      const res = (((p2 - p1) / p1) * 100).toFixed(2);
+      const dir = res >= 0 ? 'increase' : 'decrease';
+      big = Math.abs(res) + '%'; explain = `A ${Math.abs(res)}% ${dir} from ${p1} to ${p2}`;
+    } else if (mode === 'discount') {
+      const disc = ((p2 / 100) * p1).toFixed(2);
+      const final = (p1 - disc).toFixed(2);
+      big = '₹' + final; explain = `You save ₹${disc}. Final price: ₹${final}`;
+    }
+    document.getElementById('pct-big').textContent = big;
+    document.getElementById('pct-explain').textContent = explain;
+    document.getElementById('pct-result').classList.add('show');
+  }
+
+  // Init percentage inputs
+  renderPctMode();
+
+  // Set today's date as default for age calculator
+  document.getElementById('age-to').valueAsDate = new Date();
+</script>
+</body>
+</html>
